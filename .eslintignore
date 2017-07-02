@@ -1,0 +1,13 @@
+node_modules/**
+src/vendor/**
+dist/**
+lib/**
+**/*.map
+**/*.css
+**/*.html
+**/*.md
+**/*.svg
+**/*.png
+**/*.iml
+**/*.mp3
+test/**
