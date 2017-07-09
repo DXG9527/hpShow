@@ -22,14 +22,14 @@ class App {
     getDefaultConfig() {
         return {
             camera: {
-                fov: 45,
+                fov: 35,
                 aspect: window.innerWidth / window.innerHeight,
-                near: 0.1,
-                far: 1000,
+                near: 1,
+                far: 5000,
                 position: {
                     x: 0,
                     y: 0,
-                    z: 10
+                    z: 1500
                 },
                 lookAt: {
                     x: 0,
@@ -65,7 +65,7 @@ class App {
         const {fov, aspect, near, far, position, lookAt} = this.config.camera;
         const camera = new PerspectiveCamera(fov, aspect, near, far);
         camera.position.set(position.x, position.y, position.z);
-        camera.lookAt(new Vector3(lookAt.x, lookAt.y, lookAt.z));
+        camera.lookAt( this.scene.position );
         this.camera = camera;
     }
 
@@ -91,8 +91,8 @@ class App {
      */
     initLight() {
         const self = this;
-        self.scene.add(new AmbientLight(0xbbbbbb));
-        self.scene.add(new DirectionalLight(0xffffff, 0.6));
+        self.scene.add(new AmbientLight(0xffffff));
+        // self.scene.add(new DirectionalLight(0xffffff, 0.6));
     }
 
     /**
