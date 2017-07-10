@@ -3,11 +3,14 @@ import {
     SphereGeometry,
     MeshBasicMaterial,
     Mesh,
+    TextureLoader,
     CanvasTexture,
     MeshPhongMaterial,
     PlaneBufferGeometry,
     Fog,
     RepeatWrapping,
+    LinearFilter,
+    UVMapping,
     Geometry,
     Vector2,
     Vector3,
@@ -22,7 +25,9 @@ import sweetAlert from 'sweetalert';
 import 'sweetalert/dist/sweetalert.css';
 import {merge} from '../lib/utils/object';
 import {default as App} from '../lib/configs/app';
+import picture from '../assets/images/picture.jpg';
 
+let floorHeight;
 class Home extends App {
     constructor() {
         super();
@@ -38,13 +43,8 @@ class Home extends App {
         this.animate = this.animate.bind(this);
     }
 
-    //setFog
-    setFog = () => {
-        this.scene.fog = new Fog( 0xEFF2F7, 1500, 4000 );
-    };
-
     // GROUND
-    groundMesh = () => {
+    addGroundMesh = () => {
         let imageCanvas = document.createElement( "canvas" );
         let context = imageCanvas.getContext( "2d" );
         imageCanvas.width = imageCanvas.height = 128;
@@ -66,16 +66,47 @@ class Home extends App {
         let	meshCanvas = new Mesh( geometry, materialCanvas );
         meshCanvas.rotation.x = - Math.PI / 2;
         meshCanvas.scale.set( 1000, 1000, 1000 );
-        return meshCanvas;
+        meshCanvas.position.y = floorHeight;
+
+        this.scene.add(meshCanvas);
     };
 
-    setStage = () => {
+    //add paintings
+    addPaintings = () => {
         let self = this;
-        let geometry = new SphereGeometry(4, 64, 64);
-        let material = new MeshBasicMaterial({color: 0xffffff});
-        let mesh = new Mesh(geometry, material);
+        let loader = new TextureLoader();
+        loader.load(
+            picture,
+            function (texture) {
+                let material = new MeshBasicMaterial( { color: 0xffffff, map: texture} );
+                let image = texture.image;
+                let geometry = new PlaneBufferGeometry(100, 100);
+                let mesh = new Mesh(geometry, material);
+                floorHeight = - 1.117 * image.height;
+                mesh.scale.x = image.width / 100;
+                mesh.scale.y = image.height / 100;
+                // mesh.position.x = -((SCREEN_WIDTH - 1.1 * image.width)/2) + i*1.15 * image.width;
+                mesh.position.z = 0;
+                mesh.position.y = floorHeight/2
+                self.scene.add(mesh);
+            }
+        );
+
+        loader.minFilter = loader.magFilter = LinearFilter
+        loader.mapping = UVMapping;
+
+    };
+
+
+    setStage = () => {
+        this.scene.fog = new Fog( 0xEFF2F7, 1500, 4000 );
+
+        // let geometry = new SphereGeometry(4, 64, 64);
+        // let material = new MeshBasicMaterial({color: 0xffffff});
+        // let mesh = new Mesh(geometry, material);
         // self.scene.add(mesh);
-        self.scene.add(this.groundMesh());
+        this.addPaintings();
+        this.addGroundMesh();
     };
 
 
