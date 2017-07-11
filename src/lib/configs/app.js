@@ -38,12 +38,11 @@ class App {
                 }
             },
             renderer: {
-                canvas: undefined,
                 alpha: false,
                 width: window.innerWidth,
                 height: window.innerHeight,
-                clearColor: 0x000000,
-                clearAlpha: 0
+                clearColor: 0xEFF2F7,
+                clearAlpha: 1
             },
             light: {}
         }
@@ -73,15 +72,17 @@ class App {
      * 初始化WebGLRenderer
      */
     initRenderer() {
-        const {canvas, alpha, width, height, clearColor, clearAlpha} = this.config.renderer;
+        const { alpha, width, height, clearColor, clearAlpha} = this.config.renderer;
         const renderer = new WebGLRenderer({
-            canvas: canvas,
             antialias: true,
             alpha: alpha
         });
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(width, height);
-        // renderer.setClearColor(clearColor, clearAlpha);
+        renderer.setClearColor(clearColor, clearAlpha);
+        renderer.autoClear = false;
+        renderer.sortObjects = false;
+        renderer.domElement.style.position = "relative";
         this.container.appendChild(renderer.domElement);
         this.renderer = renderer;
     }

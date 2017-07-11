@@ -34,9 +34,7 @@ class Home extends App {
         this.config = merge(this.getDefaultConfig(), {
             camera: {
                 position: {
-                    x: 4,
-                    y: 8,
-                    z: 16
+                    z: 1500
                 }
             }
         });
@@ -66,7 +64,7 @@ class Home extends App {
         let	meshCanvas = new Mesh( geometry, materialCanvas );
         meshCanvas.rotation.x = - Math.PI / 2;
         meshCanvas.scale.set( 1000, 1000, 1000 );
-        meshCanvas.position.y = floorHeight;
+        // meshCanvas.position.y = floorHeight;
 
         this.scene.add(meshCanvas);
     };
@@ -101,21 +99,21 @@ class Home extends App {
     setStage = () => {
         this.scene.fog = new Fog( 0xEFF2F7, 1500, 4000 );
 
-        // let geometry = new SphereGeometry(4, 64, 64);
-        // let material = new MeshBasicMaterial({color: 0xffffff});
-        // let mesh = new Mesh(geometry, material);
-        // self.scene.add(mesh);
-        this.addPaintings();
+        // this.addPaintings();
         this.addGroundMesh();
     };
 
-
+    renderUpdate = () => {
+        this.camera.lookAt( this.scene.position );
+        // this.camera.updateMatrixWorld();
+        super.render();
+    };
 
     /**
      * 需要绑定this，否则requestAnimationFrame再次调用时，this为undefined
      */
     animate() {
-        super.render();
+        this.renderUpdate();
         window.requestAnimationFrame(this.animate);
     }
 
