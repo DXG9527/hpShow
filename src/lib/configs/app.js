@@ -2,6 +2,7 @@ import {
     Scene,
     WebGLRenderer,
     PerspectiveCamera,
+    Fog,
     Vector3,
     AxisHelper,
     GridHelper,
@@ -14,6 +15,8 @@ import OrbitControls from 'three-orbitcontrols';
 class App {
     constructor() {
         this.config = this.getDefaultConfig();
+        this.screenWidth = window.innerWidth;
+        this.screenHeight = window.innerHeight;
     }
 
     /**
@@ -23,12 +26,12 @@ class App {
         return {
             camera: {
                 fov: 35,
-                aspect: window.innerWidth / window.innerHeight,
+                aspect: this.screenWidth / this.screenHeight,
                 near: 1,
                 far: 5000,
                 position: {
                     x: 0,
-                    y: 0,
+                    y: 100,
                     z: 1500
                 },
                 lookAt: {
@@ -39,8 +42,8 @@ class App {
             },
             renderer: {
                 alpha: false,
-                width: window.innerWidth,
-                height: window.innerHeight,
+                width: this.screenWidth,
+                height: this.screenHeight,
                 clearColor: 0xEFF2F7,
                 clearAlpha: 1
             },
@@ -55,6 +58,7 @@ class App {
         this.container = document.createElement( 'div' );
         document.body.appendChild( this.container );
         this.scene = new Scene();
+        this.scene.fog = new Fog( 0xEFF2F7, 1500, 4000 );
     }
 
     /**
@@ -64,7 +68,7 @@ class App {
         const {fov, aspect, near, far, position, lookAt} = this.config.camera;
         const camera = new PerspectiveCamera(fov, aspect, near, far);
         camera.position.set(position.x, position.y, position.z);
-        camera.lookAt( this.scene.position );
+        camera.lookAt( new Vector3(lookAt.x, lookAt.y, lookAt.z) );
         this.camera = camera;
     }
 
@@ -79,7 +83,7 @@ class App {
         });
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(width, height);
-        renderer.setClearColor(clearColor, clearAlpha);
+        renderer.setClearColor(this.scene.fog.color, clearAlpha);
         renderer.autoClear = false;
         renderer.sortObjects = false;
         renderer.domElement.style.position = "relative";
@@ -117,11 +121,11 @@ class App {
         // 轨道控制器
         const self = this;
         if (self.camera && self.renderer && self.renderer.domElement) {
-            const orbit = new OrbitControls(self.camera, self.renderer.domElement);
-            orbit.enablePan = false;
-            orbit.minDistance = 50.0;
-            orbit.maxDistance = 250.0;
-            orbit.maxPolarAngle = Math.PI * 0.495;
+            const orbit = new OrbitControls( self.camera );
+            // orbit.enablePan = false;
+            // orbit.minDistance = 50.0;
+            // orbit.maxDistance = 250.0;
+            // orbit.maxPolarAngle = Math.PI * 0.495;
             orbit.target.set( 0, 0, 0 );
         }
     }
@@ -145,6 +149,7 @@ class App {
     render() {
         const self = this;
         self.stats.update();
+        self.renderer.clear();
         self.renderer.render(self.scene, self.camera);
     }
 
@@ -152,15 +157,15 @@ class App {
      * 增加辅助工具
      */
     addHelpers() {
-        // const axisSize = 100; // 坐标轴参考线长度
-        // const axisHelper = new AxisHelper(axisSize);
-        // this.scene.add(axisHelper);
+        const axisSize = 100; // 坐标轴参考线长度
+        const axisHelper = new AxisHelper(axisSize);
+        this.scene.add(axisHelper);
 
-        // 网格长度100，分成100格
-        // const gridSize = 100;
-        // const divisions = 100;
-        // const gridHelper = new GridHelper(gridSize, divisions);
-        // this.scene.add(gridHelper);
+        //网格长度100，分成100格
+        const gridSize = 100;
+        const divisions = 100;
+        const gridHelper = new GridHelper(gridSize, divisions);
+        this.scene.add(gridHelper);
     }
 }
 

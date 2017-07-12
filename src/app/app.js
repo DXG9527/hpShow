@@ -3,11 +3,12 @@ import {
     SphereGeometry,
     MeshBasicMaterial,
     Mesh,
+    Font,
     TextureLoader,
     CanvasTexture,
     MeshPhongMaterial,
     PlaneBufferGeometry,
-    Fog,
+    TextGeometry,
     RepeatWrapping,
     LinearFilter,
     UVMapping,
@@ -26,8 +27,9 @@ import 'sweetalert/dist/sweetalert.css';
 import {merge} from '../lib/utils/object';
 import {default as App} from '../lib/configs/app';
 import picture from '../assets/images/picture.jpg';
+import chinese from '../assets/font/chinese.json';
 
-let floorHeight;
+let floorHeight = 0;
 class Home extends App {
     constructor() {
         super();
@@ -38,6 +40,11 @@ class Home extends App {
                 }
             }
         });
+        this.geometry = new PlaneBufferGeometry(100, 100);
+        this.mouse = new Vector2();
+        this.mouseX = 0;
+        this.mouseY = 0;
+        this.raycaster = new Raycaster();
         this.animate = this.animate.bind(this);
     }
 
@@ -60,52 +67,93 @@ class Home extends App {
         textureCanvas.wrapS = textureCanvas.wrapT = RepeatWrapping;
 
         let materialCanvas = new MeshPhongMaterial( { map: textureCanvas } );
-        let geometry = new PlaneBufferGeometry( 100, 100 );
-        let	meshCanvas = new Mesh( geometry, materialCanvas );
+        let	meshCanvas = new Mesh( this.geometry, materialCanvas );
         meshCanvas.rotation.x = - Math.PI / 2;
         meshCanvas.scale.set( 1000, 1000, 1000 );
-        // meshCanvas.position.y = floorHeight;
+        meshCanvas.position.y = floorHeight;
 
         this.scene.add(meshCanvas);
     };
 
     //add paintings
-    addPaintings = () => {
-        let self = this;
-        let loader = new TextureLoader();
-        loader.load(
-            picture,
-            function (texture) {
-                let material = new MeshBasicMaterial( { color: 0xffffff, map: texture} );
-                let image = texture.image;
-                let geometry = new PlaneBufferGeometry(100, 100);
-                let mesh = new Mesh(geometry, material);
-                floorHeight = - 1.117 * image.height;
-                mesh.scale.x = image.width / 100;
-                mesh.scale.y = image.height / 100;
-                // mesh.position.x = -((SCREEN_WIDTH - 1.1 * image.width)/2) + i*1.15 * image.width;
-                mesh.position.z = 0;
-                mesh.position.y = floorHeight/2
-                self.scene.add(mesh);
-            }
-        );
+    addPaintings = (i) => {
+        let texture = new TextureLoader().load(picture);
+        texture.minFilter = texture.magFilter = LinearFilter;
+        texture.mapping = UVMapping;
+        let image = texture.image;
+        floorHeight = - 1.117 * image.height;
+        let material = new MeshBasicMaterial( { color: 0xffffff, map: texture} );
+        let mesh = new Mesh(this.geometry, material);
+        mesh.name = 'picture_' + i;
+        mesh.scale.x = (image.width / 100) || 2;
+        mesh.scale.y = (image.height / 100) || 2;
+        mesh.position.x = -((this.screenWidth - (image.width || 200))/2) + i*1.15 * (image.width || 200);
+        mesh.position.z = 0;
+        mesh.position.y = floorHeight/2;
+        this.scene.add(mesh);
 
-        loader.minFilter = loader.magFilter = LinearFilter
-        loader.mapping = UVMapping;
-
+        this.addLabel(mesh.name, new Vector3( mesh.position.x - 50, -0.117 * image.height + 50, 0 ));
     };
 
+    // add label
+    addLabel = (text, location) => {
+        let textGeo = new TextGeometry( text, {
+            font: new Font(chinese),
+            size: 20,
+            height: 1,
+            curveSegments: 1
+        });
+        let textMaterial = new MeshBasicMaterial( { color: 0x000000 } );
+        let textMesh = new Mesh( textGeo, textMaterial );
+        textMesh.position.copy( location );
+        this.scene.add( textMesh );
+    };
+
+    //add wall
+    addWall = () => {
+        let materialWall = new MeshPhongMaterial( { color: 0x8eb5e4, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 5 } );
+        let meshWall = new Mesh( this.geometry, materialWall );
+        meshWall.scale.set( 1000, 10, 1 );
+        meshWall.receiveShadow = true;
+        meshWall.position.set(0,0,-150);
+        this.scene.add(meshWall);
+    };
 
     setStage = () => {
-        this.scene.fog = new Fog( 0xEFF2F7, 1500, 4000 );
+        let pictureList = [ 0, 1, 2, 3, 4 ];
+        for (let i=0; i<pictureList.length; i++) {
+            this.addPaintings(i);
+        }
 
-        // this.addPaintings();
+        this.addWall();
         this.addGroundMesh();
     };
 
+    onDocumentMouseMove = (event) => {
+        event.preventDefault();
+        this.mouseX = ( event.clientX - this.screenWidth/2 );
+        this.mouseY = ( event.clientY - this.screenHeight/2 );
+        this.mouse.x = ( event.clientX / this.screenWidth ) * 2 - 1;
+        this.mouse.y = - ( event.clientY / this.screenHeight ) * 2 + 1;
+    };
+
+    onWindowResize = (event) => {
+        this.camera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize( window.innerWidth, window.innerHeight );
+    };
+
     renderUpdate = () => {
+        this.camera.position.x += ( this.mouseX - this.camera.position.x ) * .05;
+        this.camera.position.y += ( - ( this.mouseY - 200) - this.camera.position.y ) * .05;
         this.camera.lookAt( this.scene.position );
-        // this.camera.updateMatrixWorld();
+        this.camera.updateMatrixWorld();
+
+        this.raycaster.setFromCamera( this.mouse, this.camera);
+        let intersects = this.raycaster.intersectObjects( this.scene.children, true);
+        if (intersects.length > 0) {
+            let currObj = intersects[0].object;
+        }
         super.render();
     };
 
@@ -119,6 +167,8 @@ class Home extends App {
 
     start() {
         super.initApp();
+        document.addEventListener( 'mousemove', this.onDocumentMouseMove, false );
+        window.addEventListener( 'resize', this.onWindowResize, false );
         this.setStage();
         this.animate();
 
