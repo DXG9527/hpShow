@@ -27,9 +27,11 @@ import 'sweetalert/dist/sweetalert.css';
 import {merge} from '../lib/utils/object';
 import {default as App} from '../lib/configs/app';
 import picture from '../assets/images/picture.jpg';
+import wall from '../assets/images/wall.jpg';
 import chinese from '../assets/font/chinese.json';
 
 let floorHeight = 0;
+let INTERSECTED;
 class Home extends App {
     constructor() {
         super();
@@ -86,12 +88,11 @@ class Home extends App {
         let mesh = new Mesh(this.geometry, material);
         mesh.name = 'picture_' + i;
         mesh.scale.x = (image.width / 100) || 2;
-        mesh.scale.y = (image.height / 100) || 2;
+        mesh.scale.y = (image.height / 100) || 4;
         mesh.position.x = -((this.screenWidth - (image.width || 200))/2) + i*1.15 * (image.width || 200);
         mesh.position.z = 0;
         mesh.position.y = floorHeight/2;
         this.scene.add(mesh);
-
         this.addLabel(mesh.name, new Vector3( mesh.position.x - 50, -0.117 * image.height + 50, 0 ));
     };
 
@@ -111,9 +112,13 @@ class Home extends App {
 
     //add wall
     addWall = () => {
-        let materialWall = new MeshPhongMaterial( { color: 0x8eb5e4, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 5 } );
+        let textureWall = new TextureLoader().load(wall);
+        // textureWall.needsUpdate = true;
+        // textureWall.repeat.set( 5, 1 );
+        // textureWall.wrapS = 1;
+        let materialWall = new MeshPhongMaterial( { color: 0x8eb5e4, map: textureWall, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 5 } );
         let meshWall = new Mesh( this.geometry, materialWall );
-        meshWall.scale.set( 1000, 10, 1 );
+        meshWall.scale.set( 80, 20, 1 );
         meshWall.receiveShadow = true;
         meshWall.position.set(0,0,-150);
         this.scene.add(meshWall);
@@ -137,15 +142,15 @@ class Home extends App {
         this.mouse.y = - ( event.clientY / this.screenHeight ) * 2 + 1;
     };
 
-    onWindowResize = (event) => {
+    onWindowResize = () => {
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize( window.innerWidth, window.innerHeight );
     };
 
     renderUpdate = () => {
-        this.camera.position.x += ( this.mouseX - this.camera.position.x ) * .05;
-        this.camera.position.y += ( - ( this.mouseY - 200) - this.camera.position.y ) * .05;
+        // this.camera.position.x += ( this.mouseX - this.camera.position.x ) * .05;
+        // this.camera.position.y += ( - ( this.mouseY - 200) - this.camera.position.y ) * .05;
         this.camera.lookAt( this.scene.position );
         this.camera.updateMatrixWorld();
 
@@ -153,6 +158,19 @@ class Home extends App {
         let intersects = this.raycaster.intersectObjects( this.scene.children, true);
         if (intersects.length > 0) {
             let currObj = intersects[0].object;
+            if (currObj.name.indexOf("picture") !== -1) {
+                if ( INTERSECTED != currObj ) {
+                    if ( INTERSECTED ) INTERSECTED.position.z = 0;
+                    INTERSECTED = currObj;
+                    INTERSECTED.position.z = INTERSECTED.position.z + 100;
+                }
+            } else {
+                if ( INTERSECTED ) INTERSECTED.position.z = 0;
+                INTERSECTED = null;
+            }
+        } else {
+            if ( INTERSECTED ) INTERSECTED.position.z = 0;
+            INTERSECTED = null;
         }
         super.render();
     };
