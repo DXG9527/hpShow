@@ -1,6 +1,4 @@
 import {
-    BoxGeometry,
-    SphereGeometry,
     MeshBasicMaterial,
     Mesh,
     Font,
@@ -12,14 +10,9 @@ import {
     RepeatWrapping,
     LinearFilter,
     UVMapping,
-    Geometry,
     Vector2,
     Vector3,
-    Object3D,
     Raycaster,
-    MeshLambertMaterial,
-    ImageUtils,
-    LineSegments
 } from 'three';
 import dat from 'dat.gui/build/dat.gui';
 import sweetAlert from 'sweetalert';

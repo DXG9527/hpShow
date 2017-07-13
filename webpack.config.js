@@ -9,7 +9,7 @@ module.exports = ({debug = false} = {}) => {
         }),
         new HtmlWebpackPlugin({
             title: '发展历史平台',
-            template: 'src/app/index.html'
+            template: 'src/index.html'
         })
     ];
     if (!debug) {
@@ -29,7 +29,7 @@ module.exports = ({debug = false} = {}) => {
     return {
         target: 'web',
         devtool: 'source-map',
-        entry: './src/app/app.js',
+        entry: './src/main.js',
         output: {
             path: path.resolve(__dirname, 'dist'),
             filename: debug ? 'bundle.js' : 'bundle.min.js',
@@ -38,6 +38,20 @@ module.exports = ({debug = false} = {}) => {
         plugins,
         module: {
             rules: [
+                {
+                    test: /\.vue$/,
+                    loader: 'vue-loader',
+                    options: {
+                        loaders: {
+                            // Since sass-loader (weirdly) has SCSS as its default parse mode, we map
+                            // the "scss" and "sass" values for the lang attribute to the right configs here.
+                            // other preprocessors should work out of the box, no loader config like this necessary.
+                            'scss': 'vue-style-loader!css-loader!sass-loader',
+                            'sass': 'vue-style-loader!css-loader!sass-loader?indentedSyntax'
+                        }
+                        // other vue-loader options go here
+                    }
+                },
                 {
                     test: /\.js$/,
                     include: [
@@ -90,6 +104,11 @@ module.exports = ({debug = false} = {}) => {
                     loader: 'file-loader'
                 }
             ]
+        },
+        resolve: {
+            alias: {
+                'vue$': 'vue/dist/vue.esm.js'
+            }
         },
         performance: {
             hints: false

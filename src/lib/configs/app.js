@@ -122,10 +122,10 @@ class App {
         const self = this;
         if (self.camera && self.renderer && self.renderer.domElement) {
             const orbit = new OrbitControls( self.camera );
-            // orbit.enablePan = false;
+            orbit.enablePan = false;
             // orbit.minDistance = 50.0;
             // orbit.maxDistance = 250.0;
-            // orbit.maxPolarAngle = Math.PI * 0.495;
+            orbit.maxPolarAngle = Math.PI * 0.495;
             orbit.target.set( 0, 0, 0 );
         }
     }
