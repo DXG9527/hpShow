@@ -29,7 +29,7 @@ module.exports = ({debug = false} = {}) => {
     return {
         target: 'web',
         devtool: 'source-map',
-        entry: './src/main.js',
+        entry: './src/app/app.js',
         output: {
             path: path.resolve(__dirname, 'dist'),
             filename: debug ? 'bundle.js' : 'bundle.min.js',

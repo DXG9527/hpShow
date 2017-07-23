@@ -56,6 +56,7 @@ class App {
      */
     initScene() {
         this.container = document.createElement( 'div' );
+        // this.container = document.getElementById('secondComponent');
         document.body.appendChild( this.container );
         this.scene = new Scene();
         this.scene.fog = new Fog( 0xEFF2F7, 1500, 4000 );
