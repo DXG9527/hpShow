@@ -1,14 +1,15 @@
 <template>
   <div id="app">
     <headerComponent></headerComponent>
+    <first-component></first-component>
   </div>
 </template>
 
 <script>
-  import headerComponent from './components/headerComponent.vue';
-  import firstComponent from './components/firstComponent.vue';
-  import secondComponent from './components/secondComponent.vue';
-  import loginComponent from './components/loginComponent.vue';
+  import headerComponent from './components/HeaderComponent.vue';
+  import firstComponent from './components/FirstComponent.vue';
+  import secondComponent from './components/SecondComponent.vue';
+  import loginComponent from './components/LoginComponent.vue';
   export default {
   name: 'app',
   data () {

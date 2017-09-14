@@ -55,9 +55,6 @@ class App {
      * 初始化场景
      */
     initScene() {
-        this.container = document.createElement( 'div' );
-        // this.container = document.getElementById('secondComponent');
-        document.body.appendChild( this.container );
         this.scene = new Scene();
         this.scene.fog = new Fog( 0xEFF2F7, 1500, 4000 );
     }
@@ -88,7 +85,11 @@ class App {
         renderer.autoClear = false;
         renderer.sortObjects = false;
         renderer.domElement.style.position = "relative";
+
+        this.container = document.createElement( 'div' );
+        // this.container = document.getElementById('app');
         this.container.appendChild(renderer.domElement);
+        // document.body.appendChild( this.container );
         this.renderer = renderer;
     }
 
@@ -112,7 +113,7 @@ class App {
         // 0: fps, 1: ms, 2: mb, 3+: custom
         stats.showPanel(0);
         this.stats = stats;
-        this.container.appendChild(stats.dom);
+        // this.container.appendChild(stats.dom);
     }
 
     /**

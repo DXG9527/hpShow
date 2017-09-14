@@ -3,9 +3,9 @@ import App from './App.vue'
 import VueRouter from "vue-router"
 import VueResource from 'vue-resource'
 import { Carousel, CarouselItem } from 'element-ui'
-import secondComponent from './components/secondComponent.vue'
-import firstComponent from './components/firstComponent.vue'
-import loginComponent from './components/loginComponent.vue'
+import secondComponent from './components/SecondComponent.vue'
+import firstComponent from './components/FirstComponent.vue'
+import loginComponent from './components/LoginComponent.vue'
 
 //开启debug模式
 Vue.config.debug = true;
@@ -43,7 +43,7 @@ const router = new VueRouter({
 const app = new Vue({
     router: router,
     render: h => h(App)
-}).$mount('#app');
+}).$mount('#root');
 
 // new Vue({
 //   el: '#app',
