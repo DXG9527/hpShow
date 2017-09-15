@@ -34,9 +34,12 @@
     "three-orbitcontrols": "^1.2.0",
     "webstomp-client": "^1.0.6",
     "element-ui": "latest",
+    "font-awesome": "^4.7.0",
     "vue": "latest",
     "vue-resource": "latest",
-    "vue-router": "latest"
+    "vue-router": "latest",
+    "less": "^2.7.2",
+    "less-loader": "^4.0.5"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.1",
