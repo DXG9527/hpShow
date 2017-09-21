@@ -1,25 +1,47 @@
 <template>
  <div id="loginComponent">
+     <div class="login-panel">
+         <p>用户登陆</p>
+     </div>
      <div class="login-input">
          <el-input v-model="password" placeholder="帐号" icon="fa-user-o"></el-input>
-         <el-input v-model="userName" placeholder="密码" icon="fa fa-lock"></el-input>
+         <el-input v-model="userName" placeholder="密码" icon="fa-lock"></el-input>
      </div>
      <div class="word-tip">
-         <span>记住我</span>
-         <span class="forgetPW">忘记密码</span>
+         <el-checkbox>记住我</el-checkbox>
+         <a v-bind:href="url">忘记密码</a>
      </div>
      <div class="login-button">
-         <button>登陆</button>
-         <button>注册</button>
+         <div><el-button v-on:click = "login">登陆</el-button></div>
+         <div><el-button>注册</el-button></div>
      </div>
  </div>
 </template>
 <script>
+import ElButton from "../../node_modules/element-ui/packages/button/src/button.vue";
+import ElCheckbox from "../../node_modules/element-ui/packages/checkbox/src/checkbox.vue";
+
 export default {
-  data() {
+    components: {
+        ElCheckbox,
+        ElButton
+    },
+    methods: {
+        login: () =>{
+            let self = this;
+            console.log('------', this);
+            if (self.userName !== '' && self.userName === self.password) {
+                alert("OK");
+            } else {
+                alert("Bad");
+            }
+        }
+    },
+    data() {
     return {
         password: '',
-        userName:''
+        userName:'',
+        url:'#'
     }
   }
 }
@@ -47,16 +69,23 @@ export default {
     .login-button {
         width: 100%;
         margin-top: 5px;
-        > button {
-            width: 40%;
+
+        > div {
+            float: left;
+            width: 50%;
             height: 30px;
+            > button {
+                width: 100%;
+            }
         }
     }
 
     .word-tip {
-        margin-top: 5px;
-        .forgetPW {
+        margin-top: 10px;
+        >a {
+            text-decoration: none;
             float: right;
+            color: #000000;
         }
     }
 </style>

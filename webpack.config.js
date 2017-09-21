@@ -42,13 +42,15 @@ module.exports = ({debug = false} = {}) => {
                 {
                     test: /\.vue$/,
                     loader: 'vue-loader',
+                    // options: vueLoaderConfig
                     options: {
                         loaders: {
                             // Since sass-loader (weirdly) has SCSS as its default parse mode, we map
                             // the "scss" and "sass" values for the lang attribute to the right configs here.
                             // other preprocessors should work out of the box, no loader config like this necessary.
                             'scss': 'vue-style-loader!css-loader!sass-loader',
-                            'sass': 'vue-style-loader!css-loader!sass-loader?indentedSyntax'
+                            'sass': 'vue-style-loader!css-loader!sass-loader?indentedSyntax',
+                            'less': 'vue-style-loader!css-loader!less-loader?indentedSyntax'
                         }
                         // other vue-loader options go here
                     }
@@ -81,6 +83,31 @@ module.exports = ({debug = false} = {}) => {
                         },
                         {
                             loader: 'sass-loader',
+                            options: {
+                                sourceMap: false,
+                                minimize: false,
+                                outputStyle: 'expanded'
+                            }
+                        }
+                    ]
+                },
+                {
+                    test: /\.(less)/,
+                    use: [
+                        {
+                            loader: 'style-loader'
+                        },
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                minimize: false
+                            }
+                        },
+                        {
+                            loader: 'postcss-loader'
+                        },
+                        {
+                            loader: 'less-loader',
                             options: {
                                 sourceMap: false,
                                 minimize: false,
