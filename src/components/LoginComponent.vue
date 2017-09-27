@@ -1,14 +1,16 @@
 <template>
  <div id="loginComponent">
-     <div class="login-panel">
-         <p>用户登陆</p>
-     </div>
+     <div class="login-panel">用户登陆</div>
      <div class="login-input">
-         <el-input v-model="password" placeholder="帐号" icon="fa-user-o"></el-input>
-         <el-input v-model="userName" placeholder="密码" icon="fa-lock"></el-input>
+         <el-input v-model="userName" placeholder="帐号" icon="fa-user-o"></el-input>
+         <el-input v-model="password" placeholder="密码" icon="fa-lock" type="password"></el-input>
+     </div>
+     <div class="errMsg" v-if="display">
+         <el-icon class="el-icon-circle-close"></el-icon>
+         <span>{{errMsg}}</span>
      </div>
      <div class="word-tip">
-         <el-checkbox>记住我</el-checkbox>
+         <el-checkbox v-model="checked">记住我</el-checkbox>
          <a v-bind:href="url">忘记密码</a>
      </div>
      <div class="login-button">
@@ -20,29 +22,40 @@
 <script>
 import ElButton from "../../node_modules/element-ui/packages/button/src/button.vue";
 import ElCheckbox from "../../node_modules/element-ui/packages/checkbox/src/checkbox.vue";
+import ElIcon from "../../node_modules/element-ui/packages/icon/src/icon.vue";
 
 export default {
     components: {
+        ElIcon,
         ElCheckbox,
         ElButton
     },
     methods: {
-        login: () =>{
-            let self = this;
-            console.log('------', this);
-            if (self.userName !== '' && self.userName === self.password) {
-                alert("OK");
+        login(){
+            if (this.userName === '') {
+                this.display = true;
+                this.errMsg = '请输入用户名';
+            } else if (this.userName !== '' && this.password === '') {
+                this.display = true;
+                this.errMsg = '请输入密码';
+            } else if (this.userName !== '' && this.password !== '' && this.userName !== this.password) {
+                this.display = true;
+                this.errMsg = '用户名和密码不一致';
             } else {
-                alert("Bad");
+                this.display = false;
+                this.errMsg = 'OK';
             }
         }
     },
     data() {
-    return {
-        password: '',
-        userName:'',
-        url:'#'
-    }
+        return {
+            password: '',
+            userName: '',
+            checked: false,
+            url: '#',
+            errMsg: '',
+            display: false
+        }
   }
 }
 </script>
@@ -60,6 +73,12 @@ export default {
         margin: auto;
     }
 
+    .login-panel {
+        text-align: center;
+        font-size: x-large;
+        margin-bottom: 10px;
+    }
+
     .el-input {
         width: 100%;
         height: 30px;
@@ -68,7 +87,7 @@ export default {
 
     .login-button {
         width: 100%;
-        margin-top: 5px;
+        margin-top: 10px;
 
         > div {
             float: left;
@@ -86,6 +105,25 @@ export default {
             text-decoration: none;
             float: right;
             color: #000000;
+            font-size: 14px;
         }
     }
+
+    .errMsg {
+        margin-top: 15px;
+        width: 100%;
+        height: 25px;
+        line-height: 25px;
+        background-color: #fff0f0;
+        border: 1px solid #ffd2d2;
+        color: #b74d46;
+        border-radius: 3px;
+        font-size: 14px;
+        .el-icon-circle-close {
+            color: #ff0000;
+            margin-left: 5px;
+            margin-right: 5px;
+        }
+    }
+
 </style>
