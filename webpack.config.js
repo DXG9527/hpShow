@@ -2,6 +2,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+let indexChunks = ['lib', 'index'];
 
 module.exports = ({debug = false} = {}) => {
     const plugins = [
@@ -9,8 +10,13 @@ module.exports = ({debug = false} = {}) => {
             'process.env.NODE_ENV': JSON.stringify(debug ? 'development' : 'production')
         }),
         new HtmlWebpackPlugin({
-            title: '发展历史平台',
+            title: '测试',
             template: 'src/index.html'
+        }),
+        new HtmlWebpackPlugin({
+            title: 'test2',
+            filename: 'test2.html',
+            template: 'src/historyShow/index.html'
         })
     ];
     if (!debug) {
@@ -42,7 +48,6 @@ module.exports = ({debug = false} = {}) => {
                 {
                     test: /\.vue$/,
                     loader: 'vue-loader',
-                    // options: vueLoaderConfig
                     options: {
                         loaders: {
                             // Since sass-loader (weirdly) has SCSS as its default parse mode, we map

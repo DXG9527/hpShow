@@ -43,7 +43,8 @@ export default {
                 this.errMsg = '用户名和密码不一致';
             } else {
                 this.display = false;
-                this.errMsg = 'OK';
+                this.errMsg = '';
+                window.open('test2.html', '_self');
             }
         }
     },

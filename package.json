@@ -11,7 +11,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --port 8300 --env.debug --open",
-    "build": "webpack",
+    "build": "webpack --env=dist",
     "lint": "eslint ./**/* --ext '.js'",
     "esdoc": "esdoc",
     "mock": "json-server ./src/mock/index.js --snapshots ./src/mock",
