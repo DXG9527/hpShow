@@ -86,8 +86,8 @@ class App {
         renderer.sortObjects = false;
         renderer.domElement.style.position = "relative";
 
-        this.container = document.createElement( 'div' );
-        // this.container = document.getElementById('app');
+        // this.container = document.createElement( 'div' );
+        this.container = document.getElementById('container');
         this.container.appendChild(renderer.domElement);
         // document.body.appendChild( this.container );
         this.renderer = renderer;

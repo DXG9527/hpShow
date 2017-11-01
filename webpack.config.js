@@ -11,12 +11,14 @@ module.exports = ({debug = false} = {}) => {
         }),
         new HtmlWebpackPlugin({
             title: '测试',
-            template: 'src/index.html'
+            template: 'src/index.html',
+            chunks:['vue']
         }),
         new HtmlWebpackPlugin({
             title: 'test2',
             filename: 'test2.html',
-            template: 'src/historyShow/index.html'
+            template: 'src/historyShow/index.html',
+            chunks:['three']
         })
     ];
     if (!debug) {
@@ -36,10 +38,13 @@ module.exports = ({debug = false} = {}) => {
     return {
         target: 'web',
         devtool: 'source-map',
-        entry: './src/main.js',
+        entry: {
+            vue: './src/main.js',
+            three: './src/app/app.js'
+        },
         output: {
             path: path.resolve(__dirname, 'dist'),
-            filename: debug ? 'bundle.js' : 'bundle.min.js',
+            filename: debug ? '[name].js' : '[name].min.js',
             publicPath: ''
         },
         plugins,
