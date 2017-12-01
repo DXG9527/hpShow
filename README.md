@@ -8,3 +8,5 @@ npm start
 ```
 
 打开 http://localhost:8300
+
+## GitHub Pages
