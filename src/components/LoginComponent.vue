@@ -14,8 +14,8 @@
          <a v-bind:href="url">忘记密码</a>
      </div>
      <div class="login-button">
-         <div><el-button v-on:click = "login">登陆</el-button></div>
-         <div><el-button>注册</el-button></div>
+         <div><el-button v-on:click = "loginWall">登陆1</el-button></div>
+         <div><el-button v-on:click = "loginSpace">登陆2</el-button></div>
      </div>
  </div>
 </template>
@@ -31,7 +31,7 @@ export default {
         ElButton
     },
     methods: {
-        login(){
+        loginWall(){
             if (this.userName === '') {
                 this.display = true;
                 this.errMsg = '请输入用户名';
@@ -44,7 +44,23 @@ export default {
             } else {
                 this.display = false;
                 this.errMsg = '';
-                window.open('test2.html', '_self');
+                window.open('wall.html', '_self');
+            }
+        },
+        loginSpace(){
+            if (this.userName === '') {
+                this.display = true;
+                this.errMsg = '请输入用户名';
+            } else if (this.userName !== '' && this.password === '') {
+                this.display = true;
+                this.errMsg = '请输入密码';
+            } else if (this.userName !== '' && this.password !== '' && this.userName !== this.password) {
+                this.display = true;
+                this.errMsg = '用户名和密码不一致';
+            } else {
+                this.display = false;
+                this.errMsg = '';
+                window.open('space.html', '_self');
             }
         }
     },

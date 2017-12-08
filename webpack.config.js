@@ -2,7 +2,6 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-let indexChunks = ['lib', 'index'];
 
 module.exports = ({debug = false} = {}) => {
     const plugins = [
@@ -15,10 +14,16 @@ module.exports = ({debug = false} = {}) => {
             chunks:['vue']
         }),
         new HtmlWebpackPlugin({
-            title: 'test2',
-            filename: 'test2.html',
-            template: 'src/historyShow/index.html',
-            chunks:['three']
+            title: 'wall',
+            filename: 'wall.html',
+            template: 'src/historyShow/wall.html',
+            chunks:['wall']
+        }),
+        new HtmlWebpackPlugin({
+            title: 'space',
+            filename: 'space.html',
+            template: 'src/historyShow/space.html',
+            chunks:['space']
         })
     ];
     if (!debug) {
@@ -40,7 +45,8 @@ module.exports = ({debug = false} = {}) => {
         devtool: 'source-map',
         entry: {
             vue: './src/main.js',
-            three: './src/app/app.js'
+            wall: './src/app/app.js',
+            space: './src/app/app.js'
         },
         output: {
             path: path.resolve(__dirname, 'dist'),

@@ -14,8 +14,6 @@ import {
     Vector3,
     Raycaster,
 } from 'three';
-import dat from 'dat.gui/build/dat.gui';
-import sweetAlert from 'sweetalert';
 import 'sweetalert/dist/sweetalert.css';
 import {merge} from '../lib/utils/object';
 import {default as App} from '../lib/configs/app';
@@ -118,13 +116,17 @@ class Home extends App {
     };
 
     setStage = () => {
-        let pictureList = [ 0, 1, 2, 3, 4 ];
-        for (let i=0; i<pictureList.length; i++) {
-            this.addPaintings(i);
-        }
-
-        this.addWall();
-        this.addGroundMesh();
+        new Promise((resolve, reject) => {
+            let pictureList = [ 0, 1, 2, 3, 4 ];
+            for (let i=0; i<pictureList.length; i++) {
+                this.addPaintings(i);
+            }
+            resolve("OK");
+            reject("Error");
+        }).then(()=> {
+            this.addWall();
+            this.addGroundMesh();
+        });
     };
 
     onDocumentMouseMove = (event) => {
